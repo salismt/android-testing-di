@@ -2,6 +2,7 @@ package co.creativev.bootcamp.got;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static co.creativev.bootcamp.got.DetailActivity.EXTRA_CHARACTER;
 
 public class GoTListOnlineAdapter extends BaseAdapter {
     private final List<GoTCharacter> characters;
@@ -74,7 +77,7 @@ public class GoTListOnlineAdapter extends BaseAdapter {
         }
     }
 
-    private View gotView(int position, View convertView, ViewGroup parent) {
+    private View gotView(final int position, View convertView, ViewGroup parent) {
         View view;
         if (convertView == null) {
             view = inflater.inflate(R.layout.list_item_got, parent, false);
@@ -88,6 +91,14 @@ public class GoTListOnlineAdapter extends BaseAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         GoTCharacter character = characters.get(position);
         holder.textView.setText(character.getFirstName() + " " + character.getLastName());
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra(EXTRA_CHARACTER, getItem(position));
+                context.startActivity(intent);
+            }
+        });
         Picasso.with(context)
                 .load(character.getThumbUrl())
                 .placeholder(R.drawable.profile_placeholder)
